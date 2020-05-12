@@ -1,5 +1,4 @@
 require 'open-uri'
-require 'json'
 
 class GamesController < ApplicationController
   def new
@@ -7,19 +6,13 @@ class GamesController < ApplicationController
   end
 
   def score
-    new
-    @answer = params[:answer]
-    @response =
-      if included?(@answer, @letters)
-        if english_word?(@answer)
-          "Congratulations! #{@answer} is a valid English Word"
-        else
-          "Sorry but #{@answer} does not seem to be a valid English word ..."
-        end
-      else
-        "Sorry but #{@answer} can't be built out of #{@letters}"
-      end
+    @letters = params[:letters]
+    @answer = params[:answer].upcase
+    @included = included?(@answer, @letters)
+    @english_word = english_word?(@answer)
   end
+
+  private
 
   def english_word?(word)
     response = open("https://wagon-dictionary.herokuapp.com/#{word}")
@@ -27,7 +20,7 @@ class GamesController < ApplicationController
     json['found']
   end
 
-  def included?(guess, grid)
-    guess.chars.all? { |letter| guess.count(letter) <= grid.count(letter) }
+  def included?(word, letters)
+    word.chars.all? { |letter| word.count(letter) <= letters.split.count(letter) }
   end
 end

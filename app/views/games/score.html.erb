@@ -1,5 +1,13 @@
 <h1>Result</h1>
 
-<p>Sorry but <%= @answer %> does not seem to be a valid English word ...</p>>
+<% if @included %>
+  <% if @english_word %>
+    <p>"Congratulations! <%= @answer %> is a valid English Word</p>
+  <% else %>
+    <p>Sorry but <%= @answer %> isn't in <%= @letters %></p>
+  <% end %>
+<% else %>
+  <p>Sorry but <%= @answer %> does not seem to be a valid English word ...</p>
+<% end %>
 
 <a id="play" href="/new">Play again</a>
